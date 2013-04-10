@@ -1,12 +1,14 @@
-use 5.014002;
+
+use strict;
+use warnings;
+use 5.010;
+
 use ExtUtils::MakeMaker;
-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
-# the contents of the Makefile that is written.
-WriteMakefile(
-    NAME              => 'AnyEvent::FileLock',
-    VERSION_FROM      => 'lib/AnyEvent/FileLock.pm', # finds $VERSION
-    PREREQ_PM         => {}, # e.g., Module::Name => 1.1
-    ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
-      (ABSTRACT_FROM  => 'lib/AnyEvent/FileLock.pm', # retrieve abstract from module
-       AUTHOR         => 'Salvador Fandino <salva@>') : ()),
-);
+
+WriteMakefile(NAME          => 'AnyEvent::FileLock',
+              VERSION_FROM  => 'lib/AnyEvent/FileLock.pm',
+              PREREQ_PM     => { 'AnyEvent' => '7.04',
+                                 'Method::WeakCallback' => '0.03' },
+              ABSTRACT_FROM => 'lib/AnyEvent/FileLock.pm',
+              AUTHOR        => 'Salvador Fandino <sfandino@yahoo.com>',
+             );
