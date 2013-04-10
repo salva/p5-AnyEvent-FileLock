@@ -1,0 +1,6 @@
+Revision history for Perl extension AnyEvent::FileLock.
+
+0.01  Wed Apr 10 14:53:29 2013
+	- original version; created by h2xs 1.23 with options
+		-AXn AnyEvent::FileLock
+
