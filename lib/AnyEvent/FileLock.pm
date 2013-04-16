@@ -205,6 +205,9 @@ locked. See L<fcntl(2)> for the details.
 
 L<AnyEvent>.
 
+L<perlfunc/flock>, L<perlfunc/fcntl>, L<fcntl(2)>, L<Fcntl>,
+L<Fcntl::Packer>.
+
 =head1 AUTHOR
 
 Salvador FandiE<ntilde>o, E<lt>sfandino@yahoo.comE<gt>
