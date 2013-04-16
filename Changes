@@ -1,6 +1,7 @@
 Revision history for Perl extension AnyEvent::FileLock.
 
-0.02
+0.02  Apr 16, 2013
+        - locking with fcntl was not working
         - add more references in documentation "See also" section
 
 0.01  Wed Apr 10 14:53:29 2013
