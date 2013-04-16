@@ -4,3 +4,4 @@ MANIFEST
 README
 t/AnyEvent-FileLock.t
 lib/AnyEvent/FileLock.pm
+t/pods.t
