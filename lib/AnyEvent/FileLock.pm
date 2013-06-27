@@ -1,6 +1,6 @@
 package AnyEvent::FileLock;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use strict;
 use warnings;
@@ -86,7 +86,11 @@ sub _acquire_lock {
     }
     elsif ($! == Errno::EAGAIN() and
            (!defined($self->{max_time}) or $self->{max_time} <= $now)) {
-        &AE::timer($self->{delay}, 0, $self->{acquire_lock_cb});
+        # we add some randomness into the delay to avoid the case
+        # where all the contenders follow exactly the same pattern so
+        # that they end looking for the pattern all at once everytime
+        # (and obviosly all but one failing).
+        &AE::timer($self->{delay} * (0.8 + rand 0.40), 0, $self->{acquire_lock_cb});
         return;
     }
     else {
@@ -188,6 +192,10 @@ failed locking attempt.
 
 Time to be delayed between consecutive locking attemps. Defaults to 1
 second.
+
+Some randomness will be added to the delay to avoid the degenerate
+case where all the contenders look for the lock at the same time
+everytime.
 
 =item whence => $whence
 
