@@ -90,7 +90,7 @@ sub _acquire_lock {
         # where all the contenders follow exactly the same pattern so
         # that they end looking for the pattern all at once everytime
         # (and obviosly all but one failing).
-        &AE::timer($self->{delay} * (0.8 + rand 0.40), 0, $self->{acquire_lock_cb});
+        $self->{timer} = &AE::timer($self->{delay} * (0.8 + rand 0.40), 0, $self->{acquire_lock_cb});
         return;
     }
     else {
