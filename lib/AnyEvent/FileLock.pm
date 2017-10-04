@@ -85,7 +85,7 @@ sub _acquire_lock {
         $self->{user_cb}->($self->{fh});
     }
     elsif ($! == Errno::EAGAIN() and
-           (!defined($self->{max_time}) or $self->{max_time} <= $now)) {
+           (!defined($self->{max_time}) or $self->{max_time} >= $now)) {
         # we add some randomness into the delay to avoid the case
         # where all the contenders follow exactly the same pattern so
         # that they end looking for the pattern all at once everytime

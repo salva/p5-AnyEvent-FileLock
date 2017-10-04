@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 BEGIN { use_ok('AnyEvent::FileLock') };
 
 use AE;
@@ -46,6 +46,32 @@ subtest 'retry to get lock' => sub {
     $cv->recv();
     is($got_lock, 1, 'got lock');
     is_deeply($w, {}, 'object emptied');
+
+    done_testing();
+};
+
+subtest 'abort after timeout' => sub {
+    my $cv = AE::cv();
+    my ($temp_fh, $filename) = tempfile();
+    flock($temp_fh, Fcntl::LOCK_EX|Fcntl::LOCK_NB);
+
+    my $got_lock;
+    my $start_time = AE::now;
+    my $end_time;
+    my $w = AnyEvent::FileLock->flock(
+        file    => $filename,
+        timeout => 1,
+        cb      => sub {
+            my ($fh) = @_;
+            $got_lock = (defined $fh) ? 1 : 0;
+            $end_time = AE::now;
+            $cv->send();
+        },
+    );
+    $cv->recv();
+    is($got_lock, 0, 'got no lock');
+    cmp_ok($start_time + 0.5, '<', $end_time, 'waited for more than 0.5s');
+    close($temp_fh);
 
     done_testing();
 };
