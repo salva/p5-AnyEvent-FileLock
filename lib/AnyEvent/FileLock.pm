@@ -36,7 +36,7 @@ sub flock {
         open $fh, $mode, $file or return
     }
     else {
-        $fh = delete $opts{file} // croak "file or fh argument is required";
+        $fh = delete $opts{fh} // croak "file or fh argument is required";
     }
 
     my $self = { file => $file,
