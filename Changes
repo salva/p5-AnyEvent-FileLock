@@ -1,5 +1,9 @@
 Revision history for Perl extension AnyEvent::FileLock.
 
+0.05  Oct 5, 2017
+        - Fix tests, "close undef" seems to be a fatal error on
+          Windows (but report by Alexandr Ciornii).
+
 0.04  Oct 5, 2017
         - Timeout handling was broken (bug report and patch by Manfred
           Stock).

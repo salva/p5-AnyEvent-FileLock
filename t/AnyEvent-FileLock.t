@@ -1,3 +1,5 @@
+# -*- Mode: cperl -*-
+
 use strict;
 use warnings;
 
@@ -15,14 +17,15 @@ subtest 'file handle as locking target' => sub {
     my $w = AnyEvent::FileLock->flock(
         fh => $temp_fh,
         cb => sub {
-            my ($fh) = @_;
-            $got_lock = (defined $fh) ? 1 : 0;
-            close($fh);
+            if (defined (my $fh = shift)) {
+                $got_lock = 1;
+                close $fh;
+            }
             $cv->send();
         },
     );
     $cv->recv();
-    is($got_lock, 1, 'got lock');
+    ok($got_lock, 'got lock');
 
     done_testing();
 };
@@ -36,15 +39,16 @@ subtest 'retry to get lock' => sub {
     my $w = AnyEvent::FileLock->flock(
         file => $filename,
         cb   => sub {
-            my ($fh) = @_;
-            $got_lock = (defined $fh) ? 1 : 0;
-            close($fh);
+            if (defined (my $fh = shift)) {
+                $got_lock = 1;
+                close $fh;
+            }
             $cv->send();
         },
     );
     my $t = AE::timer(0.3, 0, sub { flock($temp_fh, Fcntl::LOCK_UN); });
     $cv->recv();
-    is($got_lock, 1, 'got lock');
+    ok($got_lock, 'got lock');
     is_deeply($w, {}, 'object emptied');
 
     done_testing();
@@ -55,21 +59,23 @@ subtest 'abort after timeout' => sub {
     my ($temp_fh, $filename) = tempfile();
     flock($temp_fh, Fcntl::LOCK_EX|Fcntl::LOCK_NB);
 
-    my $got_lock;
+    my $got_lock = 0;
     my $start_time = AE::now;
     my $end_time;
     my $w = AnyEvent::FileLock->flock(
         file    => $filename,
         timeout => 1,
         cb      => sub {
-            my ($fh) = @_;
-            $got_lock = (defined $fh) ? 1 : 0;
+            if (defined (my $fh = shift)) {
+                $got_lock = 1;
+                close $fh;
+            }
             $end_time = AE::now;
             $cv->send();
         },
     );
     $cv->recv();
-    is($got_lock, 0, 'got no lock');
+    ok(!$got_lock, 'got no lock');
     cmp_ok($start_time + 0.5, '<', $end_time, 'waited for more than 0.5s');
     close($temp_fh);
 
