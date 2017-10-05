@@ -1,6 +1,6 @@
 package AnyEvent::FileLock;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use strict;
 use warnings;
@@ -215,13 +215,15 @@ L<AnyEvent>.
 L<perlfunc/flock>, L<perlfunc/fcntl>, L<fcntl(2)>, L<Fcntl>,
 L<Fcntl::Packer>.
 
-=head1 AUTHOR
+=head1 AUTHORS
 
 Salvador FandiE<ntilde>o, E<lt>sfandino@yahoo.comE<gt>
 
+Manfred Stock, E<lt>mstock@cpan.orgE<gt>
+
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2013 by Qindel FormaciE<oacute>n y Servicios S.L.
+Copyright (C) 2013, 2017 by Qindel FormaciE<oacute>n y Servicios S.L.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.14.2 or,
