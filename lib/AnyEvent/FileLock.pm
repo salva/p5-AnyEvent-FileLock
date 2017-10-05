@@ -36,7 +36,7 @@ sub flock {
         open $fh, $mode, $file or return
     }
     else {
-        $fh = delete $opts{file} // croak "file or fh argument is required";
+        $fh = delete $opts{fh} // croak "file or fh argument is required";
     }
 
     my $self = { file => $file,
@@ -85,12 +85,12 @@ sub _acquire_lock {
         $self->{user_cb}->($self->{fh});
     }
     elsif ($! == Errno::EAGAIN() and
-           (!defined($self->{max_time}) or $self->{max_time} <= $now)) {
+           (!defined($self->{max_time}) or $self->{max_time} >= $now)) {
         # we add some randomness into the delay to avoid the case
         # where all the contenders follow exactly the same pattern so
         # that they end looking for the pattern all at once everytime
         # (and obviosly all but one failing).
-        &AE::timer($self->{delay} * (0.8 + rand 0.40), 0, $self->{acquire_lock_cb});
+        $self->{timer} = &AE::timer($self->{delay} * (0.8 + rand 0.40), 0, $self->{acquire_lock_cb});
         return;
     }
     else {
@@ -103,7 +103,6 @@ sub _acquire_lock {
 
 1;
 __END__
-# Below is stub documentation for your module. You'd better edit it!
 
 =head1 NAME
 
