@@ -44,7 +44,10 @@ sub flock {
                  type => $type,
                  max_time => $max_time,
                  user_cb => $user_cb,
-                 delay => $delay };
+                 delay => $delay,
+                 success => 0,
+                 failed => 0,
+             };
 
     bless $self, $class;
 
@@ -82,6 +85,7 @@ sub _acquire_lock {
         $ok = fcntl($self->{fh}, Fcntl::F_SETLK, Fcntl::Packer::pack_fcntl_flock(\%flock));
     }
     if ($ok) {
+        $self->{success} = 1;
         $self->{user_cb}->($self->{fh});
     }
     elsif ($! == Errno::EAGAIN() and
@@ -94,11 +98,22 @@ sub _acquire_lock {
         return;
     }
     else {
+        $self->{failed} = 1;
         $self->{user_cb}->();
     }
     # release all the references, the object is useless from this
     # point on time.
     %$self = ();
+}
+
+sub failed {
+    my $self = shift;
+    return $self->{failed};
+}
+
+sub success {
+    my $self = shift;
+    return $self->{success};
 }
 
 1;
