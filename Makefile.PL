@@ -11,4 +11,9 @@ WriteMakefile(NAME          => 'AnyEvent::FileLock',
                                  'Method::WeakCallback' => '0.03' },
               ABSTRACT_FROM => 'lib/AnyEvent/FileLock.pm',
               AUTHOR        => 'Salvador Fandino <sfandino@yahoo.com>',
+              META_MERGE    => {
+                  resources => {
+                      repository => 'https://github.com/salva/p5-AnyEvent-FileLock',
+                  },
+              },
              );
